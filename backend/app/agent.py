@@ -24,15 +24,16 @@ def knowledge_retrieval_tool(query: str):
 tools = [sql_query_tool, knowledge_retrieval_tool]
 
 # Using Groq for lightning-fast inference
-llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
 
 prompt = ChatPromptTemplate.from_messages([
     ("system", """You are DataPilot, a smart data assistant. 
     You help users analyze both structured (SQL) and unstructured (PDF) data.
     
-    1. For financial reports/PDFs, always use the `knowledge_retrieval_tool`.
-    2. Search for variations (e.g., "Revenue", "Income") if "Sales" isn't found.
-    3. Be concise and accurate.
+    CRITICAL RULES:
+    1. If the Database Schema says 'No tables available', you MUST NOT use the `sql_query_tool`. You must use the `knowledge_retrieval_tool` instead.
+    2. NEVER hallucinate or invent table names. ONLY write SQL for tables that explicitly exist in the schema below.
+    3. If the user asks about documents, reports, or PDFs, always use the `knowledge_retrieval_tool`.
     
     Current Database Schema:
     {schema}

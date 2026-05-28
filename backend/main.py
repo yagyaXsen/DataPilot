@@ -43,6 +43,8 @@ async def upload_file(file: UploadFile = File(...)):
         
         return {"error": "Unsupported file format. Please upload CSV, XLSX, JSON, PDF, or TXT."}
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return {"error": f"Processing failed: {str(e)}"}
 
 @app.post("/chat")

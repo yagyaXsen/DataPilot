@@ -28,6 +28,9 @@ def process_file(file_path: str):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     docs = text_splitter.split_documents(pages)
     
+    if not docs:
+        raise ValueError("No readable text found in the document. It might be a scanned image or empty.")
+    
     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
     
     if os.path.exists(VECTOR_DB_PATH):
