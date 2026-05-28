@@ -12,3 +12,4 @@ langchain-groq
 faiss-cpu
 python-dotenv
 pypdf
+sentence-transformers

@@ -1,4 +1,4 @@
-from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_groq import ChatGroq
 from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
@@ -23,8 +23,8 @@ def knowledge_retrieval_tool(query: str):
 
 tools = [sql_query_tool, knowledge_retrieval_tool]
 
-# Using Gemini 1.5 Flash for high daily limits and stability on Render
-llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0)
+# Using Groq for lightning-fast inference
+llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
 
 prompt = ChatPromptTemplate.from_messages([
     ("system", """You are DataPilot, a smart data assistant. 
