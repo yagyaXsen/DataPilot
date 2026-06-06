@@ -24,9 +24,23 @@ def initialize_embeddings_and_collection():
             return google_embed, "datapilot_gemini_vectors"
         except Exception as e:
             print(f"Google API Key failed verification: {str(e)}")
+            if os.getenv("RENDER"):
+                # Strictly prevent OOM crash in production by refusing local fallback
+                raise RuntimeError(
+                    "CRITICAL ERROR: The provided GOOGLE_API_KEY is invalid or has been denied access by Google. "
+                    "In production on Render, local Hugging Face fallback is disabled to prevent "
+                    "Out of Memory (OOM) crashes (>512MB RAM limit). Please update your Render environment variables with a valid Google API key."
+                ) from e
             print("Falling back to local BAAI/bge-small-en-v1.5 embeddings.")
             
-    # Local fallback
+    # Local fallback for development environment only
+    if os.getenv("RENDER"):
+        raise RuntimeError(
+            "CRITICAL ERROR: GOOGLE_API_KEY is not defined in the environment. "
+            "Production on Render requires Google Gemini Embeddings to stay within memory limits. "
+            "Please add GOOGLE_API_KEY to your Render environment variables."
+        )
+        
     hf_embed = HuggingFaceEmbeddings(model_name="BAAI/bge-small-en-v1.5")
     return hf_embed, "datapilot_pdf_vectors"
 
