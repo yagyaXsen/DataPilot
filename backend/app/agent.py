@@ -14,7 +14,14 @@ db = SQLDatabase(engine)
 @tool
 def sql_query_tool(query: str):
     """Executes SQL queries against structured data (CSV/Excel/JSON)."""
-    return db.run(query)
+    schema = get_db_schema()
+    if schema == "No tables available.":
+        return "CRITICAL ERROR: The database is completely empty. There are no tables to query. You MUST use the knowledge_retrieval_tool to answer the user's question from the PDFs."
+    
+    try:
+        return db.run(query)
+    except Exception as e:
+        return f"SQL Error: {str(e)}. Please check the schema and try again or use the knowledge_retrieval_tool."
 
 @tool
 def knowledge_retrieval_tool(query: str):
@@ -43,9 +50,6 @@ prompt = ChatPromptTemplate.from_messages([
     MessagesPlaceholder(variable_name="agent_scratchpad"),
 ])
 
-agent = create_tool_calling_agent(llm, tools, prompt)
-agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
-
 def ask_datapilot(user_input: str, chat_history=None):
     if chat_history is None:
         chat_history = []
@@ -54,6 +58,17 @@ def ask_datapilot(user_input: str, chat_history=None):
     chat_history = chat_history[-5:]
     
     schema = get_db_schema()
+    
+    # DYNAMIC TOOL SELECTION
+    # If there are no CSVs uploaded, physically hide the SQL tool from the AI
+    active_tools = [knowledge_retrieval_tool]
+    if schema != "No tables available.":
+        active_tools.append(sql_query_tool)
+        
+    # Re-build agent for this specific request with the allowed tools
+    agent = create_tool_calling_agent(llm, active_tools, prompt)
+    agent_executor = AgentExecutor(agent=agent, tools=active_tools, verbose=True)
+    
     response = agent_executor.invoke({
         "input": user_input,
         "chat_history": chat_history,
