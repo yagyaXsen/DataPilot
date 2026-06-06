@@ -13,3 +13,4 @@ faiss-cpu
 python-dotenv
 pypdf
 sentence-transformers
+psycopg2-binary

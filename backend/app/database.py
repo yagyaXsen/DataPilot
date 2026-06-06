@@ -2,7 +2,14 @@ import pandas as pd
 from sqlalchemy import create_engine, inspect
 import os
 
-DB_URL = "sqlite:///./datapilot.db"
+from dotenv import load_dotenv
+
+load_dotenv()
+
+DB_URL = os.getenv("DATABASE_URL", "sqlite:///./datapilot.db")
+if DB_URL.startswith("postgres://"):
+    DB_URL = DB_URL.replace("postgres://", "postgresql://", 1)
+
 engine = create_engine(DB_URL)
 
 def file_to_sql(file_path: str, table_name: str):
