@@ -1,15 +1,19 @@
-from langchain_groq import ChatGroq
-from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import tool
 from .database import get_db_schema, engine
 from .vector_store import search_vector_store
-from langchain_community.utilities import SQLDatabase
 from dotenv import load_dotenv
 
 load_dotenv()
 
-db = SQLDatabase(engine)
+# Lazy-loaded database utility
+_db = None
+
+def get_sql_db():
+    global _db
+    if _db is None:
+        from langchain_community.utilities import SQLDatabase
+        _db = SQLDatabase(engine)
+    return _db
 
 @tool
 def sql_query_tool(query: str):
@@ -19,6 +23,7 @@ def sql_query_tool(query: str):
         return "CRITICAL ERROR: The database is completely empty. There are no tables to query. You MUST use the knowledge_retrieval_tool to answer the user's question from the PDFs."
     
     try:
+        db = get_sql_db()
         return db.run(query)
     except Exception as e:
         return f"SQL Error: {str(e)}. Please check the schema and try again or use the knowledge_retrieval_tool."
@@ -27,28 +32,6 @@ def sql_query_tool(query: str):
 def knowledge_retrieval_tool(query: str):
     """Searches uploaded PDFs and text documents for context."""
     return search_vector_store(query)
-
-tools = [sql_query_tool, knowledge_retrieval_tool]
-
-# Using Groq for lightning-fast inference
-llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
-
-prompt = ChatPromptTemplate.from_messages([
-    ("system", """You are DataPilot, a smart data assistant. 
-    You help users analyze both structured (SQL) and unstructured (PDF) data.
-    
-    CRITICAL RULES:
-    1. If the Database Schema says 'No tables available', you MUST NOT use the `sql_query_tool`. You must use the `knowledge_retrieval_tool` instead.
-    2. NEVER hallucinate or invent table names. ONLY write SQL for tables that explicitly exist in the schema below.
-    3. If the user asks about documents, reports, or PDFs, always use the `knowledge_retrieval_tool`.
-    
-    Current Database Schema:
-    {schema}
-    """),
-    MessagesPlaceholder(variable_name="chat_history"),
-    ("user", "{input}"),
-    MessagesPlaceholder(variable_name="agent_scratchpad"),
-])
 
 def ask_datapilot(user_input: str, chat_history=None):
     if chat_history is None:
@@ -64,6 +47,30 @@ def ask_datapilot(user_input: str, chat_history=None):
     active_tools = [knowledge_retrieval_tool]
     if schema != "No tables available.":
         active_tools.append(sql_query_tool)
+        
+    # Lazy-load all LangChain agent orchestration dependencies to reduce startup memory
+    from langchain_groq import ChatGroq
+    from langchain_classic.agents import AgentExecutor, create_tool_calling_agent
+    from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+    
+    llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
+    
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", """You are DataPilot, a smart data assistant. 
+        You help users analyze both structured (SQL) and unstructured (PDF) data.
+        
+        CRITICAL RULES:
+        1. If the Database Schema says 'No tables available', you MUST NOT use the `sql_query_tool`. You must use the `knowledge_retrieval_tool` instead.
+        2. NEVER hallucinate or invent table names. ONLY write SQL for tables that explicitly exist in the schema below.
+        3. If the user asks about documents, reports, or PDFs, always use the `knowledge_retrieval_tool`.
+        
+        Current Database Schema:
+        {schema}
+        """),
+        MessagesPlaceholder(variable_name="chat_history"),
+        ("user", "{input}"),
+        MessagesPlaceholder(variable_name="agent_scratchpad"),
+    ])
         
     # Re-build agent for this specific request with the allowed tools
     agent = create_tool_calling_agent(llm, active_tools, prompt)
