@@ -37,12 +37,14 @@ def get_db_schema():
     inspector = inspect(engine)
     schema_info = ""
     for table_name in inspector.get_table_names():
+        if table_name.startswith("langchain_pg_"):
+            continue
         schema_info += f"Table: {table_name}\n"
         columns = inspector.get_columns(table_name)
         for column in columns:
             schema_info += f"  - {column['name']} ({column['type']})\n"
         schema_info += "\n"
-    return schema_info
+    return schema_info if schema_info else "No tables available."
 
 def run_query(query: str):
     """

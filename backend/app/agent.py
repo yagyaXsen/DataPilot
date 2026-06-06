@@ -31,7 +31,7 @@ def knowledge_retrieval_tool(query: str):
 tools = [sql_query_tool, knowledge_retrieval_tool]
 
 # Using Groq for lightning-fast inference
-llm = ChatGroq(model="llama-3.1-8b-instant", temperature=0)
+llm = ChatGroq(model="llama-3.3-70b-versatile", temperature=0)
 
 prompt = ChatPromptTemplate.from_messages([
     ("system", """You are DataPilot, a smart data assistant. 
