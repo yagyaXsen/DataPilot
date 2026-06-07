@@ -1,4 +1,4 @@
-# DataPilot 🚀
+# DataPilot 
 
 DataPilot is a powerful AI-driven data analysis assistant that handles both **structured data** (CSV, Excel, JSON) and **unstructured data** (PDF, TXT) using a hybrid RAG (Retrieval-Augmented Generation) architecture.
 
