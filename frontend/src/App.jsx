@@ -8,14 +8,17 @@ import {
   Loader2,
   Paperclip,
   FileSpreadsheet,
-  FileJson
+  FileJson,
+  Layers
 } from 'lucide-react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
+import TechStack from './TechStack.jsx';
 
 const API_BASE_URL = "http://localhost:8001";
 
 const App = () => {
+  const [view, setView] = useState('chat'); // 'chat' | 'techstack'
   const [messages, setMessages] = useState([
     { role: 'assistant', content: "Ready to explore your data. Upload a CSV or PDF to begin." }
   ]);
@@ -80,6 +83,10 @@ const App = () => {
     }
   };
 
+  if (view === 'techstack') {
+    return <TechStack onBack={() => setView('chat')} />;
+  }
+
   return (
     <div className="flex h-screen bg-background text-neutral-400 font-sans">
       {/* Minimal Sidebar */}
@@ -109,7 +116,14 @@ const App = () => {
           </section> 
         </div>
 
-        <div className="p-6 border-t border-border">
+        <div className="p-6 border-t border-border space-y-3">
+          <button
+            onClick={() => setView('techstack')}
+            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-neutral-500 hover:text-neutral-200 hover:bg-white/5 transition-all text-xs border border-transparent hover:border-border"
+          >
+            <Layers size={13} />
+            <span>Tech Stack</span>
+          </button>
           <div className="flex items-center gap-2 px-2">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50"></div>
             <span className="text-[10px] text-muted">System Active</span>
