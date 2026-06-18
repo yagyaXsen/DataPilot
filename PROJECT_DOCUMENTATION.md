@@ -171,9 +171,10 @@ By building the system this way, we prove we aren't just building a standard cha
 
 | Technology | Type | Environment | Purpose |
 |---|---|---|---|
-| **PostgreSQL + PGVector** | Relational + Vector DB | Production (Render) | Primary database. Handles both structured SQL tables AND vector embeddings via the `pgvector` extension |
-| **SQLite** | Relational DB | Local Development | Lightweight file-based SQL database (`datapilot.db`) for local structured data storage |
-| **PGVector (LangChain)** | Vector Store | Production | `langchain_community.vectorstores.pgvector.PGVector` — stores and retrieves embedded document chunks |
+| **Supabase** | Managed PostgreSQL (Cloud) | Production | Cloud-hosted PostgreSQL database. Provides the `DATABASE_URL` connection string used by both SQLAlchemy (structured tables) and PGVector (vector embeddings) |
+| **PostgreSQL + PGVector** | Relational + Vector DB | Production (Render) | The underlying database engine inside Supabase. The `pgvector` extension is enabled to support vector similarity search alongside standard SQL tables |
+| **SQLite** | Relational DB | Local Development | Lightweight file-based SQL database (`datapilot.db`) fallback when no `DATABASE_URL` is set |
+| **PGVector (LangChain)** | Vector Store | Production | `langchain_community.vectorstores.pgvector.PGVector` — stores and retrieves embedded document chunks inside Supabase PostgreSQL |
 | **FAISS (CPU)** | Vector Index | Local Fallback | `faiss-cpu` — Facebook AI Similarity Search, used in early dev iterations for in-memory vector indexing |
 
 ---
@@ -181,11 +182,12 @@ By building the system this way, we prove we aren't just building a standard cha
 ### Layer 5 — DevOps & Deployment
 
 | Technology | Category | Purpose |
-|---|---|---|
+|---|---|
 | **Render** | Cloud Platform | Hosts the FastAPI backend as a Web Service and the React app as a Static Site |
+| **Supabase** | Managed Database Host | Provides the cloud-hosted PostgreSQL instance via `DATABASE_URL`. Acts as the single production database for both SQL tables and PGVector embeddings |
 | **GitHub** | Version Control | Source of truth for the codebase. Render auto-deploys on push to `main` |
 | **Procfile** | Process Declaration | Declares `web: gunicorn -w 1 -k uvicorn.workers.UvicornWorker main:app` for Render |
-| **`.env` / Environment Variables** | Config | Stores `GOOGLE_API_KEY`, `GROQ_API_KEY`, `DATABASE_URL` securely outside the codebase |
+| **`.env` / Environment Variables** | Config | Stores `GOOGLE_API_KEY`, `GROQ_API_KEY`, `DATABASE_URL` (Supabase) securely outside the codebase |
 | **`RENDER` env flag** | Guard Logic | `vector_store.py` checks `os.getenv("RENDER")` to block memory-heavy local fallbacks in production |
 
 ---

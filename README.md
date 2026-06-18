@@ -110,8 +110,9 @@ User (React UI)
 ### Databases
 | DB | Purpose |
 |---|---|
-| PostgreSQL + PGVector | Production vector store |
-| SQLite | Local SQL fallback |
+| Supabase | Managed cloud PostgreSQL host — provides the `DATABASE_URL` for both SQL and PGVector |
+| PostgreSQL + PGVector | Underlying DB engine inside Supabase with `pgvector` extension for vector search |
+| SQLite | Local SQL fallback when no `DATABASE_URL` is set |
 | FAISS (CPU) | Local vector indexing fallback |
 
 ---
