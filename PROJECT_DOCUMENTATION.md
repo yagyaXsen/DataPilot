@@ -115,7 +115,7 @@ By building the system this way, we prove we aren't just building a standard cha
 
 ---
 
-### 🌐 Layer 1 — Frontend (React + Vite)
+### Layer 1 — Frontend (React + Vite)
 
 | Technology | Version | Category | Purpose |
 |---|---|---|---|
@@ -132,7 +132,7 @@ By building the system this way, we prove we aren't just building a standard cha
 
 ---
 
-### ⚙️ Layer 2 — Backend (Python + FastAPI)
+### Layer 2 — Backend (Python + FastAPI)
 
 | Technology | Version | Category | Purpose |
 |---|---|---|---|
@@ -150,7 +150,7 @@ By building the system this way, we prove we aren't just building a standard cha
 
 ---
 
-### 🤖 Layer 3 — AI Engine (LangChain + LLM)
+### Layer 3 — AI Engine (LangChain + LLM)
 
 | Technology | Model / Version | Category | Purpose |
 |---|---|---|---|
@@ -167,7 +167,7 @@ By building the system this way, we prove we aren't just building a standard cha
 
 ---
 
-### 🗄️ Layer 4 — Databases & Vector Stores
+### Layer 4 — Databases & Vector Stores
 
 | Technology | Type | Environment | Purpose |
 |---|---|---|---|
@@ -178,7 +178,7 @@ By building the system this way, we prove we aren't just building a standard cha
 
 ---
 
-### 🚀 Layer 5 — DevOps & Deployment
+### Layer 5 — DevOps & Deployment
 
 | Technology | Category | Purpose |
 |---|---|---|
@@ -190,7 +190,7 @@ By building the system this way, we prove we aren't just building a standard cha
 
 ---
 
-### 📐 Full Architecture — Component Map
+### Full Architecture — Component Map
 
 ```
 ╔══════════════════════════════════════════════════════════════════════════════════════════════╗
@@ -222,7 +222,7 @@ By building the system this way, we prove we aren't just building a standard cha
 
 ---
 
-### 🖥️ Interactive Tech Stack Page
+### Interactive Tech Stack Page
 
 The Tech Stack page (`TechStack.jsx`) is built directly into the DataPilot UI and is accessible from the sidebar. It renders:
 
