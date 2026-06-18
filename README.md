@@ -5,7 +5,7 @@ It seamlessly handles both **structured data** (CSV, Excel, JSON) via an SQL Age
 
 ---
 
-## ✨ Features
+## Features
 
 | Feature | Description |
 |---|---|
@@ -18,7 +18,7 @@ It seamlessly handles both **structured data** (CSV, Excel, JSON) via an SQL Age
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ```
 User (React UI)
@@ -75,7 +75,7 @@ User (React UI)
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
 | Library | Version | Role |
@@ -117,7 +117,7 @@ User (React UI)
 
 ---
 
-## ⚡ Local Setup
+## Local Setup
 
 ### 1. Backend
 ```bash
@@ -150,7 +150,7 @@ npm run dev
 
 ---
 
-## 🌐 Deployment on Render
+## Deployment on Render
 
 ### Backend (Web Service)
 | Setting | Value |
@@ -170,7 +170,7 @@ npm run dev
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 DataPilot/
@@ -194,7 +194,7 @@ DataPilot/
 
 ---
 
-## 💡 How to Use
+## How to Use
 
 1. **Upload** — Drop a CSV/Excel/JSON for SQL analysis, or a PDF/TXT for semantic search
 2. **Ask** — Type any question: *"What is the total revenue by region?"* or *"Summarize the key risks in the report"*
@@ -202,4 +202,4 @@ DataPilot/
 
 ---
 
-*Built with ❤️ using FastAPI · LangChain · Groq · PGVector · React · Vite*
+*Built with  using FastAPI · LangChain · Groq · PGVector · React · Vite*
