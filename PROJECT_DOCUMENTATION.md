@@ -12,7 +12,51 @@ Knowledge workers and data analysts facing huge amounts of information experienc
 
 DataPilot solves this by acting as a unified, natural language analytical engine. It seamlessly handles both structured and unstructured data through a Hybrid Retrieval-Augmented Generation (RAG) architecture.
 
-## 2. System Architecture: How It Works & Why
+## 2. A Plain-English Walkthrough
+
+The best way to understand DataPilot is through a real example. Imagine you want to answer this question:
+
+> **"What were our Q1 sales, and what risks were identified in the quarterly report?"**
+
+Normally, you'd need to open Excel for the numbers, open a PDF reader for the report, manually search both, then stitch the answer together yourself. DataPilot does all of that in one question. Here is exactly how:
+
+**Step 1 — You upload your files**
+
+You drag a sales CSV and a quarterly report PDF into the app. The system looks at each file and asks: is this a number-type file or a words-type file?
+
+**Step 2 — The system processes each file differently, automatically**
+
+- The CSV → A tool called Pandas reads it, cleans up the column names, and saves it as a proper table inside a real database (like a mini Excel sheet, but a database).
+- The PDF → A different tool reads all the text out of it, chops it into small chunks (like paragraphs), and converts each chunk into a kind of "fingerprint" (called an embedding) that captures its meaning. Those fingerprints get stored in a special database built for searching by meaning, not just keywords.
+
+So now you have two databases: one for exact numbers, one for searchable document meaning.
+
+**Step 3 — You ask your question in plain English**
+
+You type the Q1 sales + risks question into the chat box. No SQL, no menus.
+
+**Step 4 — The AI agent decides what to do**
+
+This is the smart part. An AI model (LLaMA 3.3) reads your question and reasons about it almost like a person would:
+
+- "Q1 sales" → that's a number → I should run a database query
+- "risks identified in the report" → that's meaning/context → I should search the documents
+
+It's not a hardcoded rule like "if question contains 'sales' do X" — the AI actually decides this itself based on understanding the question, which is why it can handle questions you never anticipated.
+
+**Step 5 — It runs both tools and gets real results**
+
+- For the sales part: it writes an actual SQL query (like `SELECT SUM(revenue) FROM sales WHERE quarter='Q1'`) and runs it against the real database. The number comes back exact — not guessed.
+- For the risks part: it searches the document database for the chunks whose "meaning fingerprint" is closest to "risks in the report," and pulls out the actual relevant paragraphs.
+
+**Step 6 — It combines both answers into one response**
+
+The AI takes the exact sales number and the retrieved risk paragraphs, and writes you one clean, natural-language answer — citing both sources in a single reply.
+
+---
+
+## 3. System Architecture: How It Works & Why
+
 
 Our system is divided into Three Major Pillars.
 
