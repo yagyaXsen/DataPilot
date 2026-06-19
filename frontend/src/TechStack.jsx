@@ -15,7 +15,6 @@ const STACK = [
     category: 'Frontend',
     color: '#38bdf8',
     glow: 'rgba(56,189,248,0.15)',
-    icon: '⚛️',
     items: [
       { name: 'React 19', desc: 'UI component library — declarative, reactive views', badge: 'Core' },
       { name: 'Vite 8', desc: 'Next-gen frontend build tool with instant HMR', badge: 'Build' },
@@ -30,7 +29,6 @@ const STACK = [
     category: 'Backend',
     color: '#34d399',
     glow: 'rgba(52,211,153,0.15)',
-    icon: '🐍',
     items: [
       { name: 'FastAPI', desc: 'High-performance async Python web framework', badge: 'Core' },
       { name: 'Uvicorn / Gunicorn', desc: 'ASGI + WSGI server for production deployment', badge: 'Server' },
@@ -46,7 +44,6 @@ const STACK = [
     category: 'AI & LLM',
     color: '#a78bfa',
     glow: 'rgba(167,139,250,0.15)',
-    icon: '🤖',
     items: [
       { name: 'LangChain', desc: 'Framework for building LLM-powered applications', badge: 'Core' },
       { name: 'LangChain-Groq', desc: 'Groq-hosted LLaMA 3.3-70B ultra-fast inference', badge: 'LLM' },
@@ -60,7 +57,6 @@ const STACK = [
     category: 'Databases & Storage',
     color: '#fb923c',
     glow: 'rgba(251,146,60,0.15)',
-    icon: '🗄️',
     items: [
       { name: 'PostgreSQL + PGVector', desc: 'Production vector store for semantic similarity search', badge: 'Vector DB' },
       { name: 'SQLite', desc: 'Lightweight local SQL database for structured data', badge: 'Structured' },
@@ -71,7 +67,6 @@ const STACK = [
     category: 'DevOps & Deployment',
     color: '#f472b6',
     glow: 'rgba(244,114,182,0.15)',
-    icon: '🚀',
     items: [
       { name: 'Render', desc: 'Cloud platform for backend (Web Service) & frontend (Static)', badge: 'Hosting' },
       { name: 'GitHub', desc: 'Version control and CI/CD source of truth', badge: 'VCS' },
@@ -212,7 +207,6 @@ export default function TechStack({ onBack }) {
             className="mb-20"
           >
             <div className="flex items-center gap-4 mb-8">
-              <span className="text-2xl">{section.icon}</span>
               <div>
                 <h2 className="text-white font-semibold text-lg">{section.category}</h2>
               </div>
